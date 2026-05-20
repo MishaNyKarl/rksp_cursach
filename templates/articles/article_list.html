@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Мои статьи{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">Мои статьи</h1>
+    {% if user.profile.role == 'author' %}<a class="btn btn-primary" href="{% url 'articles:create' %}">Создать статью</a>{% endif %}
+</div>
+{% include 'articles/includes/article_table.html' with articles=articles show_author=False %}
+{% endblock %}

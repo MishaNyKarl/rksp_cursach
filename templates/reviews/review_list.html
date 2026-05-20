@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Рецензии{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h2 mb-1">Рецензии</h1>
+        <p class="text-muted mb-0">{{ article.title }}</p>
+    </div>
+    <a class="btn btn-outline-primary" href="{% url 'articles:detail' article.pk %}">К статье</a>
+</div>
+<div class="page-card">
+    {% for review in reviews %}
+        <div class="review-item">
+            <div class="fw-semibold">{{ review.get_decision_display }} · {{ review.reviewer.username }}</div>
+            <div class="text-muted small">{{ review.created_at|date:'d.m.Y H:i' }}</div>
+            <p class="mb-0 mt-2">{{ review.comment|linebreaksbr }}</p>
+        </div>
+    {% empty %}
+        <p class="text-muted mb-0">Рецензий пока нет.</p>
+    {% endfor %}
+</div>
+{% endblock %}

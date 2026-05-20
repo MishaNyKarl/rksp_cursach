@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Рецензирование{% endblock %}
+{% block content %}
+<h1 class="h2 mb-3">Статьи, назначенные мне</h1>
+{% include 'articles/includes/article_table.html' with articles=articles show_author=True %}
+{% endblock %}

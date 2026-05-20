@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<div class="page-card mb-3">
+    <div class="d-flex justify-content-between align-items-start gap-3">
+        <div>
+            <span class="badge status-badge mb-2">{{ article.get_status_display }}</span>
+            <h1 class="h2 mb-2">{{ article.title }}</h1>
+            <p class="text-muted mb-0">{{ article.category.name }} · автор: {{ article.author.username }}{% if article.reviewer %} · рецензент: {{ article.reviewer.username }}{% endif %}</p>
+        </div>
+        <div class="d-flex gap-2">
+            {% if article.author_id == user.id and article.can_be_edited %}
+                <a class="btn btn-outline-primary" href="{% url 'articles:edit' article.pk %}">Редактировать</a>
+                <form method="post" action="{% url 'articles:submit' article.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit">Отправить</button>
+                </form>
+            {% endif %}
+            {% if article.reviewer_id == user.id and user.profile.role == 'reviewer' and article.status != 'accepted' and article.status != 'rejected' %}
+                <a class="btn btn-primary" href="{% url 'reviews:create' article.pk %}">Оставить рецензию</a>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <h2 class="h5">Аннотация</h2>
+    <p>{{ article.abstract|linebreaks }}</p>
+    <h2 class="h5">Текст статьи</h2>
+    <div class="article-content">{{ article.content|linebreaks }}</div>
+    {% if article.file %}
+        <a class="btn btn-outline-secondary mt-3" href="{{ article.file.url }}">Скачать файл</a>
+    {% endif %}
+</div>
+
+<div class="page-card">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h4 mb-0">Рецензии</h2>
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'reviews:list' article.pk %}">Все рецензии</a>
+    </div>
+    {% for review in reviews %}
+        <div class="review-item">
+            <div class="fw-semibold">{{ review.get_decision_display }} · {{ review.reviewer.username }}</div>
+            <div class="text-muted small">{{ review.created_at|date:'d.m.Y H:i' }}</div>
+            <p class="mb-0 mt-2">{{ review.comment|linebreaksbr }}</p>
+        </div>
+    {% empty %}
+        <p class="text-muted mb-0">Рецензий пока нет.</p>
+    {% endfor %}
+</div>
+{% endblock %}

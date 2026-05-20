@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: article_review_service
+      POSTGRES_USER: article_user
+      POSTGRES_PASSWORD: article_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py seed_data && gunicorn article_review_service.wsgi:application --bind 0.0.0.0:8000"
+    environment:
+      SECRET_KEY: django-insecure-docker-dev-key
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
+      DATABASE_URL: postgres://article_user:article_password@db:5432/article_review_service
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

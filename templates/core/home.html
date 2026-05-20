@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Главная | Article Review Service{% endblock %}
+{% block content %}
+<section class="hero-panel mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <p class="text-primary fw-semibold mb-2">Учебный клиент-серверный MVP</p>
+            <h1 class="display-5 fw-bold mb-3">Сервис для публикации и рецензирования статей</h1>
+            <p class="lead text-muted mb-4">Авторы публикуют материалы, администратор назначает рецензентов, а рецензенты принимают решение по статье.</p>
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary btn-lg" href="{% url 'accounts:dashboard' %}">Перейти в кабинет</a>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'accounts:login' %}">Войти в систему</a>
+                <a class="btn btn-outline-primary btn-lg ms-2" href="{% url 'accounts:register' %}">Зарегистрироваться</a>
+            {% endif %}
+        </div>
+        <div class="col-lg-5">
+            <div class="stats-grid">
+                <div class="stat-card"><span>{{ articles_count }}</span><small>статей</small></div>
+                <div class="stat-card"><span>{{ categories_count }}</span><small>категорий</small></div>
+                <div class="stat-card"><span>{{ accepted_count }}</span><small>принято</small></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="info-card">
+            <h2>Автор</h2>
+            <p>Создает статьи, редактирует черновики и отправляет материалы на проверку.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="info-card">
+            <h2>Рецензент</h2>
+            <p>Работает только с назначенными статьями и оставляет итоговое решение.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="info-card">
+            <h2>Администратор</h2>
+            <p>Управляет пользователями, ролями, категориями, статьями и назначениями.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
