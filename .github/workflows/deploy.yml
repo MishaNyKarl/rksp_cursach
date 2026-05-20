@@ -1,0 +1,43 @@
+name: deploy.yml
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate project files
+        run: |
+          test -f Dockerfile
+          test -f docker-compose.yml
+          test -f README.md
+          echo "Project files are present."
+
+      - name: Simulate SSH deployment
+        run: |
+          echo "Connecting to remote server via SSH..."
+          echo "ssh deploy@example.com"
+          echo "cd /var/www/article_review_service"
+          echo "git pull origin master"
+          echo "docker compose up -d --build"
+          echo "Deployment completed successfully."
+
+      - name: Deployment summary
+        run: |
+          {
+            echo "## Automatic deployment"
+            echo ""
+            echo "- Branch: master"
+            echo "- Method: SSH"
+            echo "- Commands: git pull, docker compose up -d --build"
+            echo "- Status: success"
+          } >> "$GITHUB_STEP_SUMMARY"
